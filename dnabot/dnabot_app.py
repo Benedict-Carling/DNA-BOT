@@ -4,9 +4,9 @@ Created on Thu Apr 11 14:26:07 2019
 
 @author: mh2210
 """
+import pandas as pd
 import os
 import csv
-import pandas as pd
 import numpy as np
 import json
 import sys
@@ -66,6 +66,8 @@ def main():
         sys.exit("User specified 'QUIT' during app.")
     root = tk.Tk()
     construct_path = gui.UserDefinedPaths(root, 'Construct csv file')
+    print("construct_path")
+    print(construct_path)
     root.destroy()
     root = tk.Tk()
     sources_paths = gui.UserDefinedPaths(root, 'Sources csv files',
@@ -73,6 +75,9 @@ def main():
     if len(sources_paths.output) > len(SOURCE_DECK_POS):
         raise ValueError(
             'Number of source plates exceeds deck positions.')
+
+    print("sources_paths")
+    print(sources_paths)
     root.destroy()
     os.chdir(os.path.dirname(construct_path.output))
     construct_base = os.path.basename(construct_path.output)
@@ -111,7 +116,7 @@ def main():
     generate_ot2_script(TRANS_SPOT_FNAME, os.path.join(
         template_dir_path, TRANS_SPOT_TEMP_FNAME),
         spotting_tuples=spotting_tuples,
-        soc_well=f"A{dnabotinst.soc_column}")
+        soc_well="A{}".format(dnabotinst.soc_column))
 
     # Write non-OT2 scripts
     if 'metainformation' in os.listdir():
