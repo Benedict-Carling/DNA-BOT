@@ -2,7 +2,7 @@
 """
 Created on Thu Apr 11 14:26:07 2019
 
-@author: mh2210
+@author: mh2210, Benedict_Carling
 """
 import pandas as pd
 import os
@@ -10,10 +10,16 @@ import csv
 import numpy as np
 import json
 import sys
-import dnabot_gui as gui
+#import dnabot_gui as gui
 import tkinter as tk
 import mplates
 
+# MY FUNCTION VARIABLES
+ethanol_well_for_stage_2 = "A11"
+deep_well_plate_stage_4 = "A1"
+input_construct_path = '/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/storch_et_al_cons.csv'
+output_sources_paths = ('/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/BIOLEGIO_BASIC_STD_SET.csv', '/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/part_plate_2_230419.csv')
+    
 # Constant str
 TEMPLATE_DIR_NAME = 'template_ot2_scripts'
 CLIP_TEMP_FNAME = 'clip_template.py'
@@ -58,37 +64,40 @@ def main():
 
     # Obtain user input
     print("Requesting user input, if not visible checked minimized windows.")
-    root = tk.Tk()
-    dnabotinst = gui.DnabotApp(root)
-    root.mainloop()
-    root.destroy()
-    if dnabotinst.quit_status:
-        sys.exit("User specified 'QUIT' during app.")
-    root = tk.Tk()
-    construct_path = gui.UserDefinedPaths(root, 'Construct csv file')
-    print("construct_path")
-    print(construct_path)
-    root.destroy()
-    root = tk.Tk()
-    sources_paths = gui.UserDefinedPaths(root, 'Sources csv files',
-                                         multiple_files=True)
-    if len(sources_paths.output) > len(SOURCE_DECK_POS):
+    #root = tk.Tk()
+    #dnabotinst = gui.DnabotApp(root)
+    #root.mainloop()
+    #root.destroy()
+    #if dnabotinst.quit_status:
+    #    sys.exit("User specified 'QUIT' during app.")
+    #root = tk.Tk()
+
+    #First initalialising construct path
+    #construct_path = gui.UserDefinedPaths(root, 'Construct csv file')
+    #root.destroy()
+    #root = tk.Tk()
+    #sources_paths = gui.UserDefinedPaths(root, 'Sources csv files',
+    #                                     multiple_files=True)
+    if len(output_sources_paths) > len(SOURCE_DECK_POS):
         raise ValueError(
             'Number of source plates exceeds deck positions.')
 
-    print("sources_paths")
-    print(sources_paths)
-    root.destroy()
-    os.chdir(os.path.dirname(construct_path.output))
-    construct_base = os.path.basename(construct_path.output)
+
+    # HERE YOU CAN SPECIFY THE PATH NAME AND IT WORKS 
+    #construct_path.output = input_construct_path
+    #sources_paths.output = output_sources_paths
+
+    #root.destroy()
+    os.chdir(os.path.dirname(input_construct_path))
+    construct_base = os.path.basename(input_construct_path)
+
     construct_base = os.path.splitext(construct_base)[0]
     print('User input successfully collected.')
 
-    # Process input csv files
     print('Processing input csv files...')
-    constructs_list = generate_constructs_list(construct_path.output)
+    constructs_list = generate_constructs_list(input_construct_path)
     clips_df = generate_clips_df(constructs_list)
-    sources_dict = generate_sources_dict(sources_paths.output)
+    sources_dict = generate_sources_dict(output_sources_paths)
 
     # calculate OT2 script variables
     print('Calculating OT-2 variables...')
@@ -102,13 +111,17 @@ def main():
                                                SPOTTING_VOLS_DICT)
 
     print('Writing files...')
+
     # Write OT2 scripts
     generate_ot2_script(CLIP_FNAME, os.path.join(
         template_dir_path, CLIP_TEMP_FNAME), clips_dict=clips_dict)
     generate_ot2_script(MAGBEAD_FNAME, os.path.join(
         template_dir_path, MAGBEAD_TEMP_FNAME),
         sample_number=magbead_sample_number,
-        ethanol_well=dnabotinst.etoh_well)
+        # THIS IS FOR THE ETHANOL TROUGH WELL IN STEP 2
+        #ethanol_well=dnabotinst.etoh_well)
+        ethanol_well=ethanol_well_for_stage_2)
+
     generate_ot2_script(F_ASSEMBLY_FNAME, os.path.join(
         template_dir_path, F_ASSEMBLY_TEMP_FNAME),
         final_assembly_dict=final_assembly_dict,
@@ -116,7 +129,10 @@ def main():
     generate_ot2_script(TRANS_SPOT_FNAME, os.path.join(
         template_dir_path, TRANS_SPOT_TEMP_FNAME),
         spotting_tuples=spotting_tuples,
-        soc_well="A{}".format(dnabotinst.soc_column))
+        #Deep well plate for Soc media during
+        #soc_well="A{}".format(dnabotinst.soc_column))
+        #previously the information about the location of the 
+        soc_well="A1")
 
     # Write non-OT2 scripts
     if 'metainformation' in os.listdir():
@@ -126,7 +142,7 @@ def main():
     os.chdir('metainformation')
     master_mix_df = generate_master_mix_df(clips_df['number'].sum())
     sources_paths_df = generate_sources_paths_df(
-        sources_paths.output, SOURCE_DECK_POS)
+        output_sources_paths, SOURCE_DECK_POS)
     dfs_to_csv(construct_base + '_' + CLIPS_INFO_FNAME, index=False,
                MASTER_MIX=master_mix_df, SOURCE_PLATES=sources_paths_df,
                CLIP_REACTIONS=clips_df)
@@ -136,9 +152,9 @@ def main():
         for final_assembly_well, construct_clips in final_assembly_dict.items():
             csvwriter.writerow([final_assembly_well, construct_clips])
     with open(construct_base + '_' + WELL_OUTPUT_FNAME, 'w') as f:
-        f.write('Magbead ethanol well: {}'.format(dnabotinst.etoh_well))
+        f.write('Magbead ethanol well: {}'.format(ethanol_well_for_stage_2))
         f.write('\n')
-        f.write('SOC column: {}'.format(dnabotinst.soc_column))
+        f.write('SOC column: {}'.format(deep_well_plate_stage_4))
     print('BOT-2 generator successfully completed!')
 
 
@@ -401,6 +417,14 @@ def generate_ot2_script(ot2_script_path, template_path, **kwargs):
     variable. The remainder of template file is subsequently written below.        
 
     """
+    print("output location of ot2_script_path:{}".format(ot2_script_path))
+    print(os.path.realpath(ot2_script_path))
+
+    #current_path = os.getcwd()
+    #remove_example = os.path.split("my_examples")
+    #writing_path = os.path.join(current_path, "output")
+    #output_path = os.path.join(writing_path, ot2_script_path)
+    
     with open(ot2_script_path, 'w') as wf:
         with open(template_path, 'r') as rf:
             for index, line in enumerate(rf):

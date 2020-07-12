@@ -22,6 +22,7 @@ class UserDefinedPaths:
             master.output = filedialog.askopenfilename(
                 title=title_name, filetypes=(("CSV files", "*.CSV"),
                                              ("all files", "*.*")))
+        print(master.output)
         self.output = master.output
 
 
