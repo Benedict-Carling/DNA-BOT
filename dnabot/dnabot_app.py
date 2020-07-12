@@ -14,11 +14,14 @@ import sys
 import tkinter as tk
 import mplates
 
+
+# e
+
 # MY FUNCTION VARIABLES
 #ethanol_well_for_stage_2 = "A11"
 #deep_well_plate_stage_4 = "A1"
-#input_construct_path = '/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/storch_et_al_cons.csv'
-#output_sources_paths = ('/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/BIOLEGIO_BASIC_STD_SET.csv', '/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/part_plate_2_230419.csv')
+#input_construct_path = '..../DNA-BOT/my_examples/storch_et_al_cons.csv'
+#output_sources_paths = ('..../DNA-BOT/my_examples/BIOLEGIO_BASIC_STD_SET.csv', '/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/part_plate_2_230419.csv')
     
 # Constant str
 TEMPLATE_DIR_NAME = 'template_ot2_scripts'
