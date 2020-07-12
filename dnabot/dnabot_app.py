@@ -15,10 +15,10 @@ import tkinter as tk
 import mplates
 
 # MY FUNCTION VARIABLES
-ethanol_well_for_stage_2 = "A11"
-deep_well_plate_stage_4 = "A1"
-input_construct_path = '/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/storch_et_al_cons.csv'
-output_sources_paths = ('/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/BIOLEGIO_BASIC_STD_SET.csv', '/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/part_plate_2_230419.csv')
+#ethanol_well_for_stage_2 = "A11"
+#deep_well_plate_stage_4 = "A1"
+#input_construct_path = '/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/storch_et_al_cons.csv'
+#output_sources_paths = ('/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/BIOLEGIO_BASIC_STD_SET.csv', '/Users/Benedict/Documents/iGEM/DNA-BOT-EDITING/DNA-BOT/my_examples/part_plate_2_230419.csv')
     
 # Constant str
 TEMPLATE_DIR_NAME = 'template_ot2_scripts'
@@ -57,7 +57,10 @@ SPOTTING_VOLS_DICT = {2: 5, 3: 5, 4: 5, 5: 5, 6: 5, 7: 5}
 SOURCE_DECK_POS = ['2', '5', '8', '7', '10', '11']
 
 
-def main():
+def dnabot(ethanol_well_for_stage_2,
+            deep_well_plate_stage_4,
+            input_construct_path,
+            output_sources_paths):
     # Parent directories
     generator_dir = os.getcwd()
     template_dir_path = os.path.join(generator_dir, TEMPLATE_DIR_NAME)
