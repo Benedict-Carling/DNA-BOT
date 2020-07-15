@@ -14,6 +14,11 @@ import sys
 import tkinter as tk
 import mplates
 
+# now this in a python function
+# we need to consider having this as a command line tool
+# as when acessing from java.
+# its probably easier to run from command line
+# rather than running command shell but we will see
 
 # e
 
